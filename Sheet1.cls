@@ -53,6 +53,17 @@ Public Sub CompSheets()
     
     If rgDst.Rows.Count <> rgSrc.Rows.Count Or _
         rgDst.Columns.Count <> rgSrc.Columns.Count Then
+    '範囲指定の対象のすべてに、シート名を含めないといけない
+    Set rgSrcEnd = shSrc.Range(shSrc.Cells(1, 1), shSrc.Range("A1").SpecialCells(xlLastCell))
+    Set rgDstEnd = shDst.Range(shDst.Cells(1, 1), shDst.Range("A1").SpecialCells(xlLastCell))
+    
+    Debug.Print rgSrcEnd.Rows.Count
+    Debug.Print rgDstEnd.Rows.Count
+    Debug.Print rgSrcEnd.Columns.Count
+    Debug.Print rgDstEnd.Columns.Count
+    
+    If rgDstEnd.Rows.Count <> rgSrcEnd.Rows.Count Or _
+        rgDstEnd.Columns.Count <> rgSrcEnd.Columns.Count Then
         ' https://daitaideit.com/vba-range/
         MsgBox "サイズ違い"
         Exit Sub
