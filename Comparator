@@ -1,0 +1,107 @@
+Option Explicit
+
+'このコードを記載しているシートのセルに次の値を設定しておく
+'B2:比較元のブック名
+'B3:比較先のブック名
+'比較対象の両方のブックの該当シートをあらかじめ開いておくこと。
+'比較先のブックではA1の位置のセルを選択しておく
+
+'プログラム実行後
+'値に違いがあったら、そのセルを選択して処理をストップ
+'値が等しいならメッセージを表示して終了する
+
+Public Sub CompSheets()
+    'Dim path
+    Dim nmSrcBook As String
+    Dim nmDstBook As String
+    Dim nmSrcSheet As String
+    Dim nmDstSheet As String
+    Dim nm As String
+
+    Dim cell As Range
+    Dim rgDst As Range
+    Dim rgSrc As Range
+    Dim shDst As Worksheet
+    Dim shSrc As Worksheet
+    Dim match As Boolean
+    Dim Ans
+    
+    'Dim x As Integer, y As Integer
+    'path = Range("B1").Text
+    'If Right(path, 1) <> "\" Then path = path & "\"
+    
+    nmSrcBook = Range("B2").Text
+    nmDstBook = Range("B3").Text
+    'Debug.Print Workbooks(Range("B3").Text).Worksheets.Count
+    
+    '処理の対象はこのコードを実行しているワークブックと同じパスのエクセルファイル
+    nm = Dir(nmSrcBook)
+    If nm <> "" Then
+        Set shSrc = Workbooks(nm).ActiveSheet
+    Else
+        Exit Sub
+    End If
+    nm = Dir(nmDstBook)
+    If nm <> "" Then
+        Set shDst = Workbooks(nm).ActiveSheet
+    Else
+        Exit Sub
+    End If
+    '範囲指定の対象の3か所すべてに、シート名を含めないといけない
+    Set rgSrc = shSrc.Range(shSrc.Cells(1, 1), shSrc.Range("A1").SpecialCells(xlLastCell))
+    Set rgDst = shDst.Range(shDst.Cells(1, 1), shDst.Range("A1").SpecialCells(xlLastCell))
+    
+    Debug.Print rgSrc.Rows.Count
+    Debug.Print rgDst.Rows.Count
+    Debug.Print rgSrc.Columns.Count
+    Debug.Print rgDst.Columns.Count
+    
+    If rgDst.Rows.Count <> rgSrc.Rows.Count Or _
+        rgDst.Columns.Count <> rgSrc.Columns.Count Then
+    '範囲指定の対象のすべてに、シート名を含めないといけない
+'    Set rgSrcEnd = shSrc.Range(shSrc.Cells(1, 1), shSrc.Range("A1").SpecialCells(xlLastCell))
+'    Set rgDstEnd = shDst.Range(shDst.Cells(1, 1), shDst.Range("A1").SpecialCells(xlLastCell))
+'
+'    Debug.Print rgSrcEnd.Rows.Count
+'    Debug.Print rgDstEnd.Rows.Count
+'    Debug.Print rgSrcEnd.Columns.Count
+'    Debug.Print rgDstEnd.Columns.Count
+'
+'    If rgDstEnd.Rows.Count <> rgSrcEnd.Rows.Count Or _
+'        rgDstEnd.Columns.Count <> rgSrcEnd.Columns.Count Then
+        ' https://daitaideit.com/vba-range/
+        Ans = MsgBox("表のサイズが異なりますが、続行しますか？", vbOKCancel)
+        If Ans <> vbOK Then
+            Exit Sub
+        End If
+    End If
+    
+    match = True
+
+    '
+    shDst.Activate
+    Set cell = Selection
+    Do
+        Set cell = cell.Offset(0, 1)
+        If cell.Column <= rgDst.Count Then
+            Set cell = cell.Offset(1, 0)
+        Else
+            Set cell = rgDst(0, 0)
+        End If
+        Debug.Print cell.Row & "," & cell.Column
+        If cell.Value <> rgSrc(cell.Row, cell.Column).Value Then
+            shDst.Activate
+            cell.Select
+            'MsgBox "値違い"
+            Exit Sub
+        End If
+        
+    Loop While cell.Row > 0 Or cell.Column > 0
+    MsgBox _
+            shDst.Name & "と、" & shSrc.Name & vbCrLf & _
+            "の比較終了。"
+    Exit Sub
+    
+End Sub
+
+
