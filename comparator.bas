@@ -1,3 +1,6 @@
+' ファイルAとファイルBの表示中のシートを比較するプログラム
+' 単純な見たままの値の比較で、書式や数式は含みません
+
 Option Explicit
 
 'このコードを記載しているシートのセルに次の値を設定しておく
@@ -6,15 +9,18 @@ Option Explicit
 '比較対象の両方のブックの該当シートをあらかじめ開いておくこと。
 
 'プログラム実行後
-'値に違いがあったら、そのセルを選択して処理をストップ
-'値が等しいならメッセージを表示して終了する
+'２つの表の値に差異のあるセルに、カーソルを置いて処理をストップ。結果表示セルにそのアドレス表示
+'値が等しいならメッセージを表示。結果表示セルに「差異なし」表示
+Const Adr_SrcFileInfo = "B2"
+Const Adr_DstFileInfo = "B3"
+Const Adr_CompResult = "B4"
 
 Public Sub CompSheets()
     Dim path
     Dim nmSrcBook As String
     Dim nmDstBook As String
-    Dim nm As String
-    Dim cnt As Integer
+    Dim wb As Workbook
+    Dim cnt
     Dim endA
 
     Dim cell As Range
@@ -25,25 +31,27 @@ Public Sub CompSheets()
     Dim match As Boolean
     Dim ans
     
-    nmSrcBook = Range("B2").Text
-    nmDstBook = Range("B3").Text
+    nmSrcBook = Range(Adr_SrcFileInfo).Text
+    nmDstBook = Range(Adr_DstFileInfo).Text
     'Debug.Print Workbooks(Range("B3").Text).Worksheets.Count
     
     '処理の対象はこのコードを実行しているワークブックと同じパスのエクセルファイル
     'path = hisWorkbook.path & "\"
-    nm = Dir(path & nmSrcBook)
-    If nm <> "" Then
-        Set shSrc = Workbooks(nm).ActiveSheet
-    Else
+    Set wb = OpenBook(nmSrcBook, True)
+    If wb Is Nothing Then
         MsgBox "コピー元ファイルなし"
         Exit Sub
-    End If
-    nm = Dir(path & nmDstBook)
-    If nm <> "" Then
-        Set shDst = Workbooks(nm).ActiveSheet
     Else
-        MsgBox "コピー先ファイルなし"
+        Set shSrc = wb.ActiveSheet
+    End If
+    
+    Set wb = OpenBook(nmDstBook, True)
+    nm = Dir(path & nmDstBook)
+    If wb Is Nothing Then
+        MsgBox "コピー元ファイルなし"
         Exit Sub
+    Else
+        Set shDst = wb.ActiveSheet
     End If
     
     Set rgSrc = shSrc.Range(shSrc.Cells(1, 1), shSrc.Range("A1").SpecialCells(xlLastCell))
@@ -89,6 +97,7 @@ Public Sub CompSheets()
         End If
         Debug.Print cell.Row & "," & cell.Column
         If cell.Text <> shSrc.Cells(cell.Row, cell.Column).Text Then
+            Range(Adr_CompResult) = cell.Address()
             shDst.Activate
             cell.Select
             'MsgBox "値違い"
@@ -96,6 +105,7 @@ Public Sub CompSheets()
         End If
         
     Loop While cell.Address <> endA
+    Range(Adr_CompResult) = "差異なし"
     MsgBox _
             shDst.Name & "と、" & shSrc.Name & vbCrLf & _
             "はピッタリ"
@@ -104,3 +114,69 @@ Public Sub CompSheets()
 End Sub
 
 
+
+'黄色←⇒橙色
+Public Sub InitSheetColorLTE()
+    Dim path
+    Dim nmDstBook As String
+    Dim nm As String
+    Dim cnt
+
+    Dim shDst As Worksheet
+    Dim i, iAns
+    Dim x
+    
+    nmDstBook = Range(Adr_DstFileInfo).Text
+    'Debug.Print Workbooks(Range("B3").Text).Worksheets.Count
+    
+    nm = Dir(path & nmDstBook)
+    If nm <> "" Then
+        Set shDst = Workbooks(nm).ActiveSheet
+    Else
+        MsgBox "コピー先ファイルなし"
+        Exit Sub
+    End If
+    
+    iAns = MsgBox("色付きのタブの色を一律にリセットします", vbOKCancel)
+    If iAns <> vbOK Then Exit Sub
+    For i = 3 To Sheets.Count
+        With Worksheets(i).Tab
+            x = .ColorIndex
+            If .Color = rgbOrange Then
+                .Color = rgbYellow
+            End If
+        End With
+    Next i
+End Sub
+
+
+
+
+
+Private Function OpenBook(path As String, bReadOnly As Boolean)
+    Dim wb As Workbook
+    Dim nm As String
+    Dim found
+    'OpenBook = Nothing
+    
+    nm = Dir(path)
+    If nm = "" Then
+        Exit Function
+    End If
+    
+    For Each wb In Workbooks
+        If wb.Name = nm Then
+            found = True
+            Exit For
+        End If
+    Next
+    
+    If found = True Then
+        Set OpenBook = Workbooks(nm)
+        Exit Function
+    End If
+    
+    
+    Set OpenBook = Workbooks.Open(Filename:=path, ReadOnly:=bReadOnly)
+
+End Function
