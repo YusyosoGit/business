@@ -186,5 +186,3 @@ Private Function OpenBook(path As String, bReadOnly As Boolean)
     Set OpenBook = Workbooks.Open(Filename:=path, ReadOnly:=bReadOnly)
     vbWorkbookOpened = True
 End Function
-
-
