@@ -11,8 +11,14 @@ Option Explicit
 'プログラム実行後
 '２つの表の値に差異のあるセルに、カーソルを置いて処理をストップ。結果表示セルにそのアドレス表示
 '値が等しいならメッセージを表示。結果表示セルに「差異なし」表示
-Const Adr_SrcFileInfo = "B2"
-Const Adr_DstFileInfo = "B3"
+Const Adr_SrcFilePath = "B2"
+Const Adr_DstFilePath = "B3"
+Const Adr_SrcShName = "C2"
+Const Adr_DstShName = "C3"
+Const Adr_SrcTblPsSz = "D2"
+Const Adr_DstTblPsSz = "D3"
+
+
 Const Adr_CompResult = "B4"
 Dim vbWorkbookOpened
 
@@ -29,14 +35,13 @@ Public Sub CompSheets()
     Dim rgSrc As Range
     Dim shDst As Worksheet
     Dim shSrc As Worksheet
-    Dim match As Boolean
+    Dim bGetTableFromSheet As Boolean
     Dim ans
     
     vbWorkbookOpened = False
     
-    nmSrcBook = Range(Adr_SrcFileInfo).Text
-    nmDstBook = Range(Adr_DstFileInfo).Text
-    'Debug.Print Workbooks(Range("B3").Text).Worksheets.Count
+    nmSrcBook = Range(Adr_SrcFilePath).Text
+    nmDstBook = Range(Adr_DstFilePath).Text
     
     '処理の対象はこのコードを実行しているワークブックと同じパスのエクセルファイル
     'path = hisWorkbook.path & "\"
@@ -61,24 +66,62 @@ Public Sub CompSheets()
         Exit Sub
     End If
         
-    Set rgSrc = shSrc.Range(shSrc.Cells(1, 1), shSrc.Range("A1").SpecialCells(xlLastCell))
-    Set rgDst = shDst.Range(shDst.Cells(1, 1), shDst.Range("A1").SpecialCells(xlLastCell))
+    bGetTableFromSheet = False
+    If Range("A1") = "TRUE" Then
+        bGetTableFromSheet = True
+    End If
+    If shSrc.Name <> Range(Adr_SrcShName).Text Then
+        Range(Adr_SrcShName) = shSrc.Name
+        bGetTableFromSheet = True
+    End If
+    If shDst.Name <> Range(Adr_DstShName).Text Then
+        Range(Adr_DstShName) = shDst.Name
+        bGetTableFromSheet = True
+    End If
     
-    Debug.Print rgSrc.Rows.Count
-    Debug.Print rgDst.Rows.Count
-    Debug.Print rgSrc.Columns.Count
-    Debug.Print rgDst.Columns.Count
+    '表の情報を記録から読み取る
+    If Not bGetTableFromSheet Then
+        Set rgSrc = ToRange(Range(Adr_SrcTblPsSz), shSrc)
+        Set rgDst = ToRange(Range(Adr_DstTblPsSz), shDst)
+        If rgSrc Is Nothing Or rgDst Is Nothing Then
+            ans = MsgBox("記録から表の情報を読み取れませんでした。対象シートから取得しますか？", vbYesNo Or vbQuestion)
+            If ans <> vbYes Then
+                Exit Sub
+            End If
+            bGetTableFromSheet = True
+        End If
+    End If
+        
+    '表をシートから読み取る
+    If bGetTableFromSheet Then
+        Set rgSrc = shSrc.Range(shSrc.Cells(1), shSrc.Range("A1").SpecialCells(xlLastCell))
+        Set rgDst = shDst.Range(shDst.Cells(1), shDst.Range("A1").SpecialCells(xlLastCell))
+        Range(Adr_SrcTblPsSz) = ToPosSize(rgSrc)
+        Range(Adr_DstTblPsSz) = ToPosSize(rgDst)
+    End If
     
-    Range("C2") = _
-        "ShName:" & shSrc.Name & vbCr & _
-        "TopLeft:(" & rgSrc.Cells(1).Row & "," & rgSrc.Cells(1).Column & ")" & vbCr & _
-        "Size:" & rgSrc.Rows.Count & "×" & rgSrc.Columns.Count
-    
-    Range("C3") = _
-        "ShName:" & shDst.Name & vbCr & _
-        "TopLeft:(" & rgDst.Cells(1).Row & "," & rgDst.Cells(1).Column & ")" & vbCr & _
-        "Size:" & rgDst.Rows.Count & "×" & rgDst.Columns.Count
-    
+    '表の大きさが異なる場合の処理
+    If Range(Adr_SrcTblPsSz).Text <> Range(Adr_DstTblPsSz).Text Then
+        ans = MsgBox("比較する表の大きさが異なるので、２つのうちどちらかに合わせる必要があります。" & _
+            "コピー元に合わせますか？" & vbCrLf & _
+            "はい　：コピー元に合わせる" & vbCrLf & _
+            "いいえ：コピー先に合わせる" & vbCrLf & _
+            "キャンセル：中止", vbYesNoCancel Or vbQuestion, "シートの変更")
+        If ans = vbCancel Then
+            Exit Sub
+        ElseIf ans = vbYes Then
+            Range(Adr_SrcTblPsSz) = ToPosSize(rgSrc)
+            Range(Adr_DstTblPsSz) = ToPosSize(rgSrc)
+            Set rgDst = shDst.Range(shDst.Cells(rgSrc.Cells(1).Row, rgSrc.Cells(1).Column), _
+                                    shDst.Cells(rgSrc.Cells(rgSrc.Cells.Count).Row, rgSrc.Cells(rgSrc.Cells.Count).Column))
+        Else
+            Range(Adr_SrcTblPsSz) = ToPosSize(rgDst)
+            Range(Adr_DstTblPsSz) = ToPosSize(rgDst)
+            Set rgSrc = shDst.Range(shSrc.Cells(rgDst.Cells(1).Row, rgDst.Cells(1).Column), _
+                                    shSrc.Cells(rgDst.Cells(rgDst.Cells.Count).Row, rgDst.Cells(rgDst.Cells.Count).Column))
+        End If
+    End If
+        
     '比較先の比較スタート地点の位置調整
     shDst.Activate
     cnt = rgDst.Count
@@ -135,7 +178,7 @@ Public Sub InitSheetColorLTE()
     Dim i, iAns
     Dim x
     
-    nmDstBook = Range(Adr_DstFileInfo).Text
+    nmDstBook = Range(Adr_DstFilePath).Text
     'Debug.Print Workbooks(Range("B3").Text).Worksheets.Count
     
     nm = Dir(path & nmDstBook)
@@ -185,4 +228,38 @@ Private Function OpenBook(path As String, bReadOnly As Boolean)
     
     Set OpenBook = Workbooks.Open(Filename:=path, ReadOnly:=bReadOnly)
     vbWorkbookOpened = True
+End Function
+
+
+' 範囲を(x, y),(x1, y1) に変換
+Private Function ToPosSize(r As Range)
+    ToPosSize = _
+        "(" & r.Cells(1).Row & ", " & r.Cells(1).Column & ")," & _
+        "(" & r.Rows.Count & ", " & r.Columns.Count & ")"
+End Function
+
+
+'座標を範囲に変換
+Private Function ToRange(s As String, sh As Worksheet)
+    Dim RE As New RegExp
+    'Dim RE As Object
+    'Set RE = CreateObject("VBScript.RegExp")
+    Dim m As match
+    Dim mc As MatchCollection
+    
+    
+    RE.IgnoreCase = True
+    RE.Global = True
+    RE.Pattern = "[0-9]+" '"\([0-9]+, [0-9]+\)\-\([0-9]+, [0-9]+\)"
+    Set mc = RE.Execute(s)
+    If mc.Count <> 4 Then
+        Set ToRange = Nothing
+        Exit Function
+    End If
+    
+    Set ToRange = sh.Range( _
+                sh.Cells(Int(mc(0)), Int(mc(1))), _
+                sh.Cells(Int(mc(2)), Int(mc(3))) _
+            )
+            
 End Function
