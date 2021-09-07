@@ -1,38 +1,29 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "Sheet1"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = True
-' ƒtƒ@ƒCƒ‹A‚Æƒtƒ@ƒCƒ‹B‚Ì•\¦’†‚ÌƒV[ƒg‚ğ”äŠr‚·‚éƒvƒƒOƒ‰ƒ€
-' ’Pƒ‚ÈŒ©‚½‚Ü‚Ü‚Ì’l‚Ì”äŠr‚ÅA‘®‚â”®‚ÍŠÜ‚İ‚Ü‚¹‚ñ
+' ãƒ•ã‚¡ã‚¤ãƒ«Aã¨ãƒ•ã‚¡ã‚¤ãƒ«Bã®è¡¨ç¤ºä¸­ã®ã‚·ãƒ¼ãƒˆã‚’æ¯”è¼ƒã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+' å˜ç´”ãªè¦‹ãŸã¾ã¾ã®å€¤ã®æ¯”è¼ƒã§ã€æ›¸å¼ã‚„æ•°å¼ã¯å«ã¿ã¾ã›ã‚“
 
 Option Explicit
 
-'‚±‚ÌƒR[ƒh‚ğ‹LÚ‚µ‚Ä‚¢‚éƒV[ƒg‚ÌƒZƒ‹‚ÉŸ‚Ì’l‚ğİ’è‚µ‚Ä‚¨‚­
-'B2:”äŠrŒ³‚ÌƒuƒbƒN–¼
-'B3:”äŠræ‚ÌƒuƒbƒN–¼
-'”äŠr‘ÎÛ‚Ì—¼•û‚ÌƒuƒbƒN‚ÌŠY“–ƒV[ƒg‚ğ‚ ‚ç‚©‚¶‚ßŠJ‚¢‚Ä‚¨‚­‚±‚ÆB
+'ã“ã®ã‚³ãƒ¼ãƒ‰ã‚’è¨˜è¼‰ã—ã¦ã„ã‚‹ã‚·ãƒ¼ãƒˆã®ã‚»ãƒ«ã«æ¬¡ã®å€¤ã‚’è¨­å®šã—ã¦ãŠã
+'B2:æ¯”è¼ƒå…ƒã®ãƒ–ãƒƒã‚¯å
+'B3:æ¯”è¼ƒå…ˆã®ãƒ–ãƒƒã‚¯å
+'æ¯”è¼ƒå¯¾è±¡ã®ä¸¡æ–¹ã®ãƒ–ãƒƒã‚¯ã®è©²å½“ã‚·ãƒ¼ãƒˆã‚’ã‚ã‚‰ã‹ã˜ã‚é–‹ã„ã¦ãŠãã“ã¨ã€‚
 
-'ƒvƒƒOƒ‰ƒ€ÀsŒã
-'‚Q‚Â‚Ì•\‚Ì’l‚É·ˆÙ‚Ì‚ ‚éƒZƒ‹‚ÉAƒJ[ƒ\ƒ‹‚ğ’u‚¢‚Äˆ—‚ğƒXƒgƒbƒvBŒ‹‰Ê•\¦ƒZƒ‹‚É‚»‚ÌƒAƒhƒŒƒX•\¦
-'’l‚ª“™‚µ‚¢‚È‚çƒƒbƒZ[ƒW‚ğ•\¦BŒ‹‰Ê•\¦ƒZƒ‹‚Éu·ˆÙ‚È‚µv•\¦
-Const Adr_SrcFilePath = "B2"
+'ãƒ—ãƒ­ã‚°ãƒ©ãƒ å®Ÿè¡Œå¾Œ
+'ï¼’ã¤ã®è¡¨ã®å€¤ã«å·®ç•°ã®ã‚ã‚‹ã‚»ãƒ«ã«ã€ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç½®ã„ã¦å‡¦ç†ã‚’ã‚¹ãƒˆãƒƒãƒ—ã€‚çµæœè¡¨ç¤ºã‚»ãƒ«ã«ãã®ã‚¢ãƒ‰ãƒ¬ã‚¹è¡¨ç¤º
+'å€¤ãŒç­‰ã—ã„ãªã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã€‚çµæœè¡¨ç¤ºã‚»ãƒ«ã«ã€Œå·®ç•°ãªã—ã€è¡¨ç¤º
+Const Adr_SrcFilePath = "C3"
 Const Adr_DstFilePath = "B3"
-Const Adr_SrcShName = "C2"
-Const Adr_DstShName = "C3"
-Const Adr_SrcTblPsSz = "D2"
-Const Adr_DstTblPsSz = "D3"
+Const Adr_SrcShName = "C4"
+Const Adr_DstShName = "B4"
+Const Adr_SrcTable = "C5"
+Const Adr_DstTable = "B5"
+Const Adr_SrcCellVal = "C6"
+Const Adr_DstCellVal = "B6"
+Const Adr_CompResult = "B7"
 
-
-Const Adr_CompResult = "B4"
 Dim vbWorkbookOpened
 
 Public Sub CompSheets()
-Attribute CompSheets.VB_ProcData.VB_Invoke_Func = "n\n14"
     Dim path
     Dim nmSrcBook As String
     Dim nmDstBook As String
@@ -41,6 +32,7 @@ Attribute CompSheets.VB_ProcData.VB_Invoke_Func = "n\n14"
     Dim wb As Workbook
     Dim cnt
     Dim eAdr
+    Dim r As Range
 
     Dim cell As Range
     Dim rgDst As Range
@@ -49,55 +41,74 @@ Attribute CompSheets.VB_ProcData.VB_Invoke_Func = "n\n14"
     Dim shSrc As Worksheet
     Dim bGetTableFromSheet As Boolean
     Dim ans
-    
+    Dim match As Boolean
+    Dim s
+    Dim sh As Worksheet
     vbWorkbookOpened = False
     
-    nmSrcBook = Range(Adr_SrcFilePath).Text
-    nmDstBook = Range(Adr_DstFilePath).Text
+'    nmSrcBook = Range(Adr_SrcFilePath).Text
+'    nmDstBook = Range(Adr_DstFilePath).Text
     'Debug.Print Workbooks(Range("B3").Text).Worksheets.Count
     
-    'ˆ—‚Ì‘ÎÛ‚Í‚±‚ÌƒR[ƒh‚ğÀs‚µ‚Ä‚¢‚éƒ[ƒNƒuƒbƒN‚Æ“¯‚¶ƒpƒX‚ÌƒGƒNƒZƒ‹ƒtƒ@ƒCƒ‹
+    'å‡¦ç†ã®å¯¾è±¡ã¯ã“ã®ã‚³ãƒ¼ãƒ‰ã‚’å®Ÿè¡Œã—ã¦ã„ã‚‹ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯ã¨åŒã˜ãƒ‘ã‚¹ã®ã‚¨ã‚¯ã‚»ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«
     'path = hisWorkbook.path & "\"
-    Set wb = OpenBook(nmSrcBook, True)
+    Set wb = OpenBook(Range(Adr_SrcFilePath).Text, nmSrcBook, True)
     If wb Is Nothing Then
-        MsgBox "ƒRƒs[Œ³ƒtƒ@ƒCƒ‹‚È‚µ", vbExclamation
+        MsgBox "ã‚³ãƒ”ãƒ¼å…ƒãƒ•ã‚¡ã‚¤ãƒ«ãªã—", vbExclamation
         Exit Sub
     Else
         Set shSrc = wb.ActiveSheet
     End If
     
-    Set wb = OpenBook(nmDstBook, False)
+    Set wb = OpenBook(Range(Adr_DstFilePath).Text, nmDstBook, False)
     If wb Is Nothing Then
-        MsgBox "ƒRƒs[æƒtƒ@ƒCƒ‹‚È‚µ", vbExclamation
+        MsgBox "ã‚³ãƒ”ãƒ¼å…ˆãƒ•ã‚¡ã‚¤ãƒ«ãªã—", vbExclamation
         Exit Sub
     Else
         Set shDst = wb.ActiveSheet
     End If
     
     If vbWorkbookOpened = True Then
-        MsgBox "ƒV[ƒg‚ğ‘I‘ğ‚µ‚Ä‚à‚¤ˆê“xÀs‚µ‚Ä‚­‚¾‚³‚¢B", vbInformation
+        MsgBox "ã‚·ãƒ¼ãƒˆã‚’é¸æŠã—ã¦ã‚‚ã†ä¸€åº¦å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚", vbInformation
+        Exit Sub
+    End If
+    
+    If Workbooks(nmDstBook).ActiveSheet.name = "ã‚·ãƒŠãƒªã‚ªä½œæˆ" And _
+        Workbooks(nmSrcBook).ActiveSheet.name = "ã‚·ãƒŠãƒªã‚ªä½œæˆ" Then
+        Set sh = Workbooks(nmDstBook).ActiveSheet
+        sh.Activate
+        If TypeName(Selection) = "Range" Then
+            Set r = Selection
+            If r.Hyperlinks.Count Then
+                s = r.Hyperlinks(1).TextToDisplay
+                Worksheets(s).Activate
+            End If
+        End If
+        
         Exit Sub
     End If
         
+    'ãƒ†ãƒ¼ãƒ–ãƒ«ã®æƒ…å ±ã‚’ã‚·ãƒ¼ãƒˆã‹ã‚‰å–å¾—
     bGetTableFromSheet = False
-    If Range("A1") = "TRUE" Then
+    If Range("A1") = True Then
         bGetTableFromSheet = True
     End If
-    If shSrc.Name <> Range(Adr_SrcShName).Text Then
-        Range(Adr_SrcShName) = shSrc.Name
+    If shSrc.name <> Range(Adr_SrcShName).Text Then
+        Range(Adr_SrcShName) = shSrc.name
         bGetTableFromSheet = True
     End If
-    If shDst.Name <> Range(Adr_DstShName).Text Then
-        Range(Adr_DstShName) = shDst.Name
+    If shDst.name <> Range(Adr_DstShName).Text Then
+        Range(Adr_DstShName) = shDst.name
         bGetTableFromSheet = True
     End If
     
-    '•\‚Ìî•ñ‚ğ‹L˜^‚©‚ç“Ç‚İæ‚é
+    'è¡¨ã®æƒ…å ±ã‚’è¨˜éŒ²ã‹ã‚‰èª­ã¿å–ã‚‹
+    
     If Not bGetTableFromSheet Then
-        Set rgSrc = ToRange(Range(Adr_SrcTblPsSz), shSrc)
-        Set rgDst = ToRange(Range(Adr_DstTblPsSz), shDst)
+        Set rgSrc = ToRange(Range(Adr_SrcTable), shSrc)
+        Set rgDst = ToRange(Range(Adr_DstTable), shDst)
         If rgSrc Is Nothing Or rgDst Is Nothing Then
-            ans = MsgBox("‹L˜^‚©‚ç•\‚Ìî•ñ‚ğ“Ç‚İæ‚ê‚Ü‚¹‚ñ‚Å‚µ‚½B‘ÎÛƒV[ƒg‚©‚çæ“¾‚µ‚Ü‚·‚©H", vbYesNo Or vbQuestion)
+            ans = MsgBox("è¨˜éŒ²ã‹ã‚‰è¡¨ã®æƒ…å ±ã‚’èª­ã¿å–ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚å¯¾è±¡ã‚·ãƒ¼ãƒˆã‹ã‚‰å–å¾—ã—ã¾ã™ã‹ï¼Ÿ", vbYesNo Or vbQuestion)
             If ans <> vbYes Then
                 Exit Sub
             End If
@@ -105,41 +116,50 @@ Attribute CompSheets.VB_ProcData.VB_Invoke_Func = "n\n14"
         End If
     End If
         
-    '•\‚ğƒV[ƒg‚©‚ç“Ç‚İæ‚é
+    'è¡¨ã‚’ã‚·ãƒ¼ãƒˆã‹ã‚‰èª­ã¿å–ã‚‹
     If bGetTableFromSheet Then
         Set rgSrc = shSrc.Range(shSrc.Cells(1), shSrc.Range("A1").SpecialCells(xlLastCell))
         Set rgDst = shDst.Range(shDst.Cells(1), shDst.Range("A1").SpecialCells(xlLastCell))
-        Range(Adr_SrcTblPsSz) = ToPosSize(rgSrc)
-        Range(Adr_DstTblPsSz) = ToPosSize(rgDst)
+        Range(Adr_SrcTable).Font.Bold = False
+        Range(Adr_DstTable).Font.Bold = False
+        Range(Adr_SrcTable) = ToPosSize(rgSrc)
+        Range(Adr_DstTable) = ToPosSize(rgDst)
     End If
     
-    '•\‚Ì‘å‚«‚³‚ªˆÙ‚È‚éê‡‚Ìˆ—
-    If Range(Adr_SrcTblPsSz).Text <> Range(Adr_DstTblPsSz).Text Then
-        ans = MsgBox("”äŠr‚·‚é•\‚Ì‘å‚«‚³‚ªˆÙ‚È‚é‚Ì‚ÅA‚Q‚Â‚Ì‚¤‚¿‚Ç‚¿‚ç‚©‚É‡‚í‚¹‚é•K—v‚ª‚ ‚è‚Ü‚·B" & _
-            "ƒRƒs[Œ³‚É‡‚í‚¹‚Ü‚·‚©H" & vbCrLf & _
-            "‚Í‚¢@FƒRƒs[Œ³‚É‡‚í‚¹‚é" & vbCrLf & _
-            "‚¢‚¢‚¦FƒRƒs[æ‚É‡‚í‚¹‚é" & vbCrLf & _
-            "ƒLƒƒƒ“ƒZƒ‹F’†~", vbYesNoCancel Or vbQuestion, "ƒV[ƒg‚Ì•ÏX")
+    'è¡¨ã®å¤§ãã•ãŒç•°ãªã‚‹å ´åˆã®å‡¦ç†
+    If Range(Adr_SrcTable).Text <> Range(Adr_DstTable).Text Then
+        ans = MsgBox("æ¯”è¼ƒã™ã‚‹è¡¨ã®å¤§ãã•ãŒç•°ãªã‚‹ã®ã§ã€ï¼’ã¤ã®ã†ã¡ã©ã¡ã‚‰ã‹ã«åˆã‚ã›ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚" & _
+            "ã‚³ãƒ”ãƒ¼å…ƒã«åˆã‚ã›ã¾ã™ã‹ï¼Ÿ" & vbCrLf & _
+            "ã¯ã„ã€€ï¼šã‚³ãƒ”ãƒ¼å…ƒã«åˆã‚ã›ã‚‹" & vbCrLf & _
+            "ã„ã„ãˆï¼šã‚³ãƒ”ãƒ¼å…ˆã«åˆã‚ã›ã‚‹" & vbCrLf & _
+            "ã‚­ãƒ£ãƒ³ã‚»ãƒ«ï¼šä¸­æ­¢", vbYesNoCancel Or vbQuestion, "ã‚·ãƒ¼ãƒˆã®å¤‰æ›´")
         If ans = vbCancel Then
             Exit Sub
-        ElseIf ans = vbYes Then
-            Range(Adr_SrcTblPsSz) = ToPosSize(rgSrc)
-            Range(Adr_DstTblPsSz) = ToPosSize(rgSrc)
-            Set rgDst = shDst.Range(shDst.Cells(rgSrc.Cells(1).Row, rgSrc.Cells(1).Column), _
-                                    shDst.Cells(rgSrc.Cells(rgSrc.Cells.Count).Row, rgSrc.Cells(rgSrc.Cells.Count).Column))
         Else
-            Range(Adr_SrcTblPsSz) = ToPosSize(rgDst)
-            Range(Adr_DstTblPsSz) = ToPosSize(rgDst)
-            Set rgSrc = shDst.Range(shSrc.Cells(rgDst.Cells(1).Row, rgDst.Cells(1).Column), _
-                                    shSrc.Cells(rgDst.Cells(rgDst.Cells.Count).Row, rgDst.Cells(rgDst.Cells.Count).Column))
+            If ans = vbYes Then
+                Range(Adr_SrcTable) = ToPosSize(rgSrc)
+                Range(Adr_DstTable) = ToPosSize(rgSrc)
+                Range(Adr_SrcTable).Font.Bold = True
+                Set rgDst = shDst.Range(shDst.Cells(rgSrc.Cells(1).Row, rgSrc.Cells(1).Column), _
+                                        shDst.Cells(rgSrc.Cells(rgSrc.Cells.Count).Row, rgSrc.Cells(rgSrc.Cells.Count).Column))
+            Else
+                Range(Adr_SrcTable) = ToPosSize(rgDst)
+                Range(Adr_DstTable) = ToPosSize(rgDst)
+                Range(Adr_DstTable).Font.Bold = True
+                Set rgSrc = shSrc.Range(shSrc.Cells(rgDst.Cells(1).Row, rgDst.Cells(1).Column), _
+                                        shSrc.Cells(rgDst.Cells(rgDst.Cells.Count).Row, rgDst.Cells(rgDst.Cells.Count).Column))
+            End If
         End If
     End If
         
-    '”äŠræ‚Ì”äŠrƒXƒ^[ƒg’n“_‚ÌˆÊ’u’²®
+    'æ¯”è¼ƒå…ˆã®æ¯”è¼ƒã‚¹ã‚¿ãƒ¼ãƒˆåœ°ç‚¹ã®ä½ç½®èª¿æ•´
     shDst.Activate
     cnt = rgDst.Count
     Set cell = Selection
-    
+    'è¤‡æ•°é¸æŠã®å ´åˆã¯å˜ä¸€é¸æŠã«ç¸®å°ã™ã‚‹
+    If cell.Cells.Count > 1 Then
+        Set cell = cell.Cells(1)
+    End If
     If cell.Column > rgDst.Cells(cnt).Column Then
         Set cell = shDst.Cells(cell.Row, rgDst.Cells(cnt).Column)
     End If
@@ -147,9 +167,10 @@ Attribute CompSheets.VB_ProcData.VB_Invoke_Func = "n\n14"
         Set cell = shDst.Cells(rgDst.Cells(cnt).Row, Cells.Column)
     End If
     cell.Select
-    '”äŠrI—¹“_
+    'æ¯”è¼ƒçµ‚äº†ç‚¹
     eAdr = cell.Address
-    '”äŠrŠJn
+    match = True
+    'æ¯”è¼ƒé–‹å§‹
     Do
         Set cell = cell.Offset(0, 1)
         If cell.Column > rgDst.Cells(cnt).Column Then
@@ -160,27 +181,50 @@ Attribute CompSheets.VB_ProcData.VB_Invoke_Func = "n\n14"
         End If
         Debug.Print cell.Row & "," & cell.Column
         If cell.Text <> shSrc.Cells(cell.Row, cell.Column).Text Then
-            Range(Adr_CompResult) = cell.Address()
-            shDst.Activate
-            cell.Select
-            'MsgBox "’lˆá‚¢"
-            Exit Sub
+            
+            match = False
+            'MsgBox "å€¤é•ã„"
+            Exit Do
+        
         End If
         
     Loop While cell.Address <> eAdr
-    Range(Adr_CompResult) = "·ˆÙ‚È‚µ"
-    MsgBox _
-            shDst.Name & "‚ÆA" & shSrc.Name & vbCrLf & _
-            "‚Íƒsƒbƒ^ƒŠ", _
-            vbInformation
-            
-    Exit Sub
+    
+    'å€¤ã‚’æ ¼ç´
+    Range(Adr_SrcCellVal) = shSrc.Cells(cell.Row, cell.Column).Text
+    Range(Adr_DstCellVal) = cell.Text
+    'shSrc.Tab.Color = rgbYellow
+    shDst.Tab.Color = rgbYellow
+    
+    If match Then
+        Range(Adr_CompResult) = "å·®ç•°ãªã—"
+        ans = MsgBox( _
+                shDst.name & "ã¨ã€" & shSrc.name & vbCrLf & _
+                "ã¯ãƒ”ãƒƒã‚¿ãƒªã§ã—ãŸã€‚ã‚·ãƒŠãƒªã‚ªä½œæˆã‚·ãƒ¼ãƒˆã«æˆ»ã‚Šã¾ã™ã‹ï¼Ÿ", _
+                vbQuestion Or vbYesNo)
+        If ans <> vbNo Then
+            Workbooks(nmSrcBook).Worksheets("ã‚·ãƒŠãƒªã‚ªä½œæˆ").Activate
+            Workbooks(nmDstBook).Worksheets("ã‚·ãƒŠãƒªã‚ªä½œæˆ").Activate
+        End If
+        
+        
+    Else
+        Range(Adr_CompResult) = cell.Address()
+        shDst.Activate
+        cell.Select
+'        ans = MsgBox("å…ƒã®å€¤ã‚’ã‚³ãƒ”ãƒ¼ã—ã¾ã™ã‹ï¼Ÿ", vbYesNoCancel)
+'        If ans = vbYes Then
+'            cell.Copy shSrc.Cells(cell.Row, cell.Column)
+'        Else
+
+    End If
+    
     
 End Sub
 
 
 
-'‰©F©ËòF
+'é»„è‰²â†â‡’æ©™è‰²
 Public Sub InitSheetColorLTE()
     Dim path
     Dim nmDstBook As String
@@ -198,11 +242,11 @@ Public Sub InitSheetColorLTE()
     If nm <> "" Then
         Set shDst = Workbooks(nm).ActiveSheet
     Else
-        MsgBox "ƒRƒs[æƒtƒ@ƒCƒ‹‚È‚µ"
+        MsgBox "ã‚³ãƒ”ãƒ¼å…ˆãƒ•ã‚¡ã‚¤ãƒ«ãªã—"
         Exit Sub
     End If
     
-    iAns = MsgBox("F•t‚«‚Ìƒ^ƒu‚ÌF‚ğˆê—¥‚ÉƒŠƒZƒbƒg‚µ‚Ü‚·", vbOKCancel)
+    iAns = MsgBox("è‰²ä»˜ãã®ã‚¿ãƒ–ã®è‰²ã‚’ä¸€å¾‹ã«ãƒªã‚»ãƒƒãƒˆã—ã¾ã™", vbOKCancel)
     If iAns <> vbOK Then Exit Sub
     For i = 3 To Sheets.Count
         With Worksheets(i).Tab
@@ -215,9 +259,9 @@ Public Sub InitSheetColorLTE()
 End Sub
 
 
-Private Function OpenBook(path As String, bReadOnly As Boolean)
+Private Function OpenBook(path As String, ByRef nm As String, bReadOnly As Boolean)
     Dim wb As Workbook
-    Dim nm As String
+    'Dim nm As String
     Dim found
     Set OpenBook = Nothing
     
@@ -227,7 +271,7 @@ Private Function OpenBook(path As String, bReadOnly As Boolean)
     End If
     
     For Each wb In Workbooks
-        If wb.Name = nm Then
+        If wb.name = nm Then
             found = True
             Exit For
         End If
@@ -244,7 +288,7 @@ Private Function OpenBook(path As String, bReadOnly As Boolean)
 End Function
 
 
-' ”ÍˆÍ‚ğ(x, y),(x1, y1) ‚É•ÏŠ·
+' ç¯„å›²ã‚’(x, y),(x1, y1) ã«å¤‰æ›
 Private Function ToPosSize(r As Range)
     ToPosSize = _
         "(" & r.Cells(1).Row & ", " & r.Cells(1).Column & ")," & _
@@ -252,7 +296,7 @@ Private Function ToPosSize(r As Range)
 End Function
 
 
-'À•W‚ğ”ÍˆÍ‚É•ÏŠ·
+'åº§æ¨™ã‚’ç¯„å›²ã«å¤‰æ›
 Private Function ToRange(s As String, sh As Worksheet)
     Dim RE As New RegExp
     'Dim RE As Object
@@ -276,3 +320,5 @@ Private Function ToRange(s As String, sh As Worksheet)
             )
             
 End Function
+
+
