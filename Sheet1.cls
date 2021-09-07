@@ -1,3 +1,12 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Sheet1"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
 ' ファイルAとファイルBの表示中のシートを比較するプログラム
 ' 単純な見たままの値の比較で、書式や数式は含みません
 
@@ -20,10 +29,21 @@ Const Adr_DstTable = "B5"
 Const Adr_SrcCellVal = "C6"
 Const Adr_DstCellVal = "B6"
 Const Adr_CompResult = "B7"
+Const Adr_CompIncomp = "B8"
 
 Dim vbWorkbookOpened
 
-Public Sub CompSheets()
+Public Sub CompSheet1()
+    Call CompSheet(False)
+End Sub
+
+
+Public Sub CompSheet2()
+    Call CompSheet(True)
+End Sub
+
+
+Private Sub CompSheets(bGetTableFromSheet As Boolean)
     Dim path
     Dim nmSrcBook As String
     Dim nmDstBook As String
@@ -32,17 +52,18 @@ Public Sub CompSheets()
     Dim wb As Workbook
     Dim cnt
     Dim eAdr
-    Dim r As Range
+    Dim i As Integer
 
     Dim cell As Range
     Dim rgDst As Range
     Dim rgSrc As Range
     Dim shDst As Worksheet
     Dim shSrc As Worksheet
-    Dim bGetTableFromSheet As Boolean
+'    Dim bGetTableFromSheet As Boolean
     Dim ans
     Dim match As Boolean
     Dim s
+    Dim r As Range
     Dim sh As Worksheet
     vbWorkbookOpened = False
     
@@ -73,32 +94,43 @@ Public Sub CompSheets()
         Exit Sub
     End If
     
-    If Workbooks(nmDstBook).ActiveSheet.name = "シナリオ作成" And _
-        Workbooks(nmSrcBook).ActiveSheet.name = "シナリオ作成" Then
-        Set sh = Workbooks(nmDstBook).ActiveSheet
-        sh.Activate
-        If TypeName(Selection) = "Range" Then
+    'シナリオ作成シートの選択された項目にジャンプ＆比較
+    If Workbooks(nmDstBook).ActiveSheet.Name = "シナリオ作成" And _
+        Workbooks(nmSrcBook).ActiveSheet.Name = "シナリオ作成" Then
+        For i = 0 To 1
+            Set sh = Workbooks(nmDstBook).ActiveSheet
+            sh.Activate
+            If TypeName(Selection) <> "Range" Then Exit For
             Set r = Selection
-            If r.Hyperlinks.Count Then
-                s = r.Hyperlinks(1).TextToDisplay
-                Worksheets(s).Activate
-            End If
+            If r.Hyperlinks.Count = 0 Then Exit For
+            If i Then r.Hyperlinks(1).Follow
+            
+            Set sh = Workbooks(nmSrcBook).ActiveSheet
+            sh.Activate
+            If TypeName(Selection) <> "Range" Then Exit For
+            Set r = Selection
+            If r.Hyperlinks.Count = 0 Then Exit For
+            If i Then r.Hyperlinks(1).Follow
+        Next
+        If i = 0 Then
+            MsgBox "シートに飛べませんでした"
+            Exit Sub
         End If
-        
+        Call CompSheets(True)
         Exit Sub
     End If
         
     'テーブルの情報をシートから取得
-    bGetTableFromSheet = False
-    If Range("A1") = True Then
+'    bGetTableFromSheet = False
+'    If Range("A1") = True Then
+'        bGetTableFromSheet = True
+'    End If
+    If shSrc.Name <> Range(Adr_SrcShName).Text Then
+        Range(Adr_SrcShName) = shSrc.Name
         bGetTableFromSheet = True
     End If
-    If shSrc.name <> Range(Adr_SrcShName).Text Then
-        Range(Adr_SrcShName) = shSrc.name
-        bGetTableFromSheet = True
-    End If
-    If shDst.name <> Range(Adr_DstShName).Text Then
-        Range(Adr_DstShName) = shDst.name
+    If shDst.Name <> Range(Adr_DstShName).Text Then
+        Range(Adr_DstShName) = shDst.Name
         bGetTableFromSheet = True
     End If
     
@@ -166,7 +198,7 @@ Public Sub CompSheets()
     If cell.Row > rgDst.Cells(cnt).Row Then
         Set cell = shDst.Cells(rgDst.Cells(cnt).Row, Cells.Column)
     End If
-    cell.Select
+    'cell.Select
     '比較終了点
     eAdr = cell.Address
     match = True
@@ -193,18 +225,17 @@ Public Sub CompSheets()
     '値を格納
     Range(Adr_SrcCellVal) = shSrc.Cells(cell.Row, cell.Column).Text
     Range(Adr_DstCellVal) = cell.Text
-    'shSrc.Tab.Color = rgbYellow
-    shDst.Tab.Color = rgbYellow
+    'shSrc.Tab.Color = rgbYellow    '未遂の色
+    shDst.Tab.ColorIndex = xlColorIndexNone
     
     If match Then
         Range(Adr_CompResult) = "差異なし"
         ans = MsgBox( _
-                shDst.name & "と、" & shSrc.name & vbCrLf & _
-                "はピッタリでした。シナリオ作成シートに戻りますか？", _
+                shDst.Name & "と、" & shSrc.Name & vbCrLf & _
+                "の値は一致しました。シナリオ作成シートに戻りますか？", _
                 vbQuestion Or vbYesNo)
         If ans <> vbNo Then
-            Workbooks(nmSrcBook).Worksheets("シナリオ作成").Activate
-            Workbooks(nmDstBook).Worksheets("シナリオ作成").Activate
+            Call GoOnToNext
         End If
         
         
@@ -271,7 +302,7 @@ Private Function OpenBook(path As String, ByRef nm As String, bReadOnly As Boole
     End If
     
     For Each wb In Workbooks
-        If wb.name = nm Then
+        If wb.Name = nm Then
             found = True
             Exit For
         End If
@@ -320,5 +351,55 @@ Private Function ToRange(s As String, sh As Worksheet)
             )
             
 End Function
+
+
+'シナリオ作成シートの選択範囲シフト、または他のシートからシナリオ作成シートに戻る
+Public Sub GoOnToNext()
+    Dim nmSrcBook As String
+    Dim nmDstBook As String
+    Dim wb As Workbook
+    Dim r As Range
+    Dim sh As Worksheet
+    Dim cnt As Integer
+'    Dim sh As Worksheet
+
+    nmSrcBook = Dir(Range(Adr_SrcFilePath).Text)
+    nmDstBook = Dir(Range(Adr_DstFilePath).Text)
+    
+    If nmSrcBook = "" Or nmDstBook = "" Then
+        MsgBox "１組のファイルが存在しません。", vbInformation
+        Exit Sub
+    End If
+    
+    'シナリオ作成シートの選択された項目を移動
+    If Workbooks(nmDstBook).ActiveSheet.Name = "シナリオ作成" And _
+        Workbooks(nmSrcBook).ActiveSheet.Name = "シナリオ作成" Then
+'        Set sh = Workbooks(nmDstBook).ActiveSheet
+'        sh.Activate
+        Workbooks(nmDstBook).ActiveSheet.Activate
+        If TypeName(Selection) <> "Range" Then Exit For
+        Set r = Selection
+'        Set sh = Workbooks(nmSrcBook).ActiveSheet
+'        sh.Activate
+        Workbooks(nmDstBook).ActiveSheet.Activate
+        If TypeName(Selection) <> "Range" Then Exit For
+        Set r = Selection
+        r.Offset(1, 0).Select
+            
+    Else
+        'シナリオ作成シートに戻る
+        Workbooks(nmDstBook).Worksheets("シナリオ作成").Activate
+        Workbooks(nmSrcBook).Worksheets("シナリオ作成").Activate
+        '未チェックのシートカウント
+        For Each sh In Worksheets
+            If sh.Tab.Color = rgbYellow Then
+                cnt = cnt + 1
+            End If
+        Next
+        Range(Adr_CompIncomp) = cnt
+        
+    End If
+
+End Sub
 
 
