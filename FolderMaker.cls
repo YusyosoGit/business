@@ -21,6 +21,10 @@ Public Sub FolderMaker()
     Dim nRn As Integer
     Dim nMv As Integer
 
+    'カレントディレクトリの変更
+    ChDir ThisWorkbook.path
+
+    '３桁の番号を取る
     Call DisNumber
     
     Set cell = Range("A1")
@@ -74,7 +78,6 @@ Public Sub DisNumber()
     Dim exp As String
     exp = "*"
     
-    path = ThisWorkbook.path
     'path = Left(path, InStrRev(path, "\"))
     's = Dir(path & "\" & exp)
     s = Dir(exp, vbDirectory)
@@ -93,6 +96,5 @@ Public Sub DisNumber()
     
         
 End Sub
-
 
 
