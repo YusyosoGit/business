@@ -1,22 +1,39 @@
+' ■■■ パス名変換 ■■■
+' Pドラ→BOXドライブのホームパス
+' ローカルパス→ホームパス
+' ホームパス→ローカルパス
+
 Option Explicit
-'BOXパス名に変換
 
 Dim str
 Const AppTitle = "パス名変換"
-Const BoxPath = "%homepath%"
+Const HomePath = "%homepath%"
+Const Label = "基地局ソフトウェア開発_MW"
 Dim RE
 Dim SS
+Dim s
+Dim p1, p2
+
 Set RE = CreateObject("VBScript.RegExp")
 Set SS = CreateObject("WScript.Shell")
 
 str = GetClipboardText()
-IF EditText(str) Then
-    MsgBox "変換不可能：" & vbCrLf & str, vbOK, AppTitle
+'文末の文字（不明）を取り除く
+str = Left(str, Len(str)-2)
+s = str
+IF ConvText(s) Then
+    MsgBox "変換不可能：" & vbCrLf & s, 0, AppTitle
     WScript.Quit 0
 End If
 
-Call PutInClipboardText(str)
-MsgBox "変換しました：" & str,vbOK, AppTitle
+Call PutInClipboardText(s)
+p1 = InStr(str, Label)
+p2 = InStr(s, Label)
+MsgBox _ 
+    Left(str, p1 + Len(Label)) & vbCrLf & _ 
+    "↓" & vbCrLf & _
+    Left(s, p2 + Len(Label)) & vbCrLf & _
+    Mid(s, p2 + Len(Label)+1), 0, AppTitle
 
 
 ' クリップボードにあるテキストを読み込む
@@ -45,31 +62,35 @@ End Sub
 Public Function ConvText(ByRef str)
 
     'Dim t, u 'As Integer
-    Dim s
-    'Dim mc, m
-
-    EditText = 0
-    s= str
-
-    'Pドラ → BOXパス
-    RE.Pattern = "^P:."
+    ConvText = 0
+    RE.Pattern = "^"".+""$"
     If RE.test(str) Then
-        str = BoxPath & Mid(str, 3)
-        Exit Function
-    End If
-    'ローカルパス → BOXパス
-    RE.Pattern = "^C:\\User\\\d{6}A00\u{4}\\..."
-    if RE.test(str) Then
-        str = BoxPath & Mid(str,10)
-        Exit Function
-    End If
-    'BOXパス → ローカルパス
-    RE.Pattern = "%homepath%..."
-    If RE.test(str) Then
-        str = "C:\User\112743A00BUJA\..." & Mid(str, 20)
-        Exit Function
+        str = Mid(str, 2, Len(str)-2)
     End If
 
+    'Pドラ → ホームパス
+    RE.Pattern = "^P:*"
+    If RE.test(str) Then
+        str = "C:" & HomePath & "\Box\基地局ソフトウェア開発_MW" & Mid(str, 3)
+        Exit Function
+    End If
+    RE.Pattern = "^C:"
+    If Not RE.test(str) Then
+        str = "C:" & str
+    End If
+    'ホームのパス → ローカルパス
+    RE.Pattern = HomePath
+    If RE.test(str) Then
+        str = RE.Replace(str, "\User\112743A00BUJA")
+        Exit Function
+    End If
+    'ローカルパス → ホームパス
+    RE.Pattern = "\\User\\\d{6}A00\w{4}"
+    If RE.test(str) Then
+        str = RE.Replace(str, HomePath)
+        Exit Function
+    End If
+    
     '変換不可能
-    EditText = 1
+    ConvText = 1
 End Function
